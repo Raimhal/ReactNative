@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView } from 'react-native';
 
 export default function Main() {
-  const [news, setNews] = useState([]);
+  const [news, setNews] = React.useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchNews();
   }, []);
 
   const fetchNews = async () => {
     try {
-      const response = await fetch('https://github.com/Raimhal/ReactNative/tree/master/news.json');
+      const response = await fetch('https://raw.githubusercontent.com/Raimhal/ReactNative/master/news.json', {cache: "no-store"});
       const data = await response.json();
-      setNews(data);
+      setNews(data?.news);
     } catch (error) {
       console.error('Error fetching news:', error);
     }
@@ -20,8 +20,9 @@ export default function Main() {
 
   return (
     <View>
+      <ScrollView>
       <Text style={styles.h1}>Новини</Text>
-      {news.map(item => (
+      {news?.map(item => (
         <View key={item.id} style={styles.info_div}>
           <Image
             style={styles.picture}
@@ -34,6 +35,7 @@ export default function Main() {
           </View>
         </View>
       ))}
+      </ScrollView>
     </View>
   );
 }
@@ -53,6 +55,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    width: "70%",
+    marginBottom: 10,
   },
   info_h2: {
     fontSize: 18,
