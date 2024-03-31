@@ -1,19 +1,30 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView } from 'react-native';
 
 export default function Gallery() {
+  const [imageURLs, setImageURLs] = React.useState([]);
+
+  React.useEffect(() => {
+    fetchGitHubImages();
+  }, []);
+
+  const fetchGitHubImages = async () => {
+    try {
+      const response = await fetch('https://api.github.com/repos/Raimhal/ReactNative/contents/images');
+      const data = await response.json();
+      const imageUrls = data.map(image => image.download_url);
+      setImageURLs(imageUrls);
+    } catch (error) {
+      console.error('Error fetching news:', error);
+    }
+  };
+
   return (
-    <View style={styles.div_style}>
-      <Image style={styles.gallery} source={require('../assets/Gallery.png')} />
-      <Image style={styles.gallery} source={require('../assets/Gallery.png')} />
-      <Image style={styles.gallery} source={require('../assets/Gallery.png')} />
-      <Image style={styles.gallery} source={require('../assets/Gallery.png')} />
-      <Image style={styles.gallery} source={require('../assets/Gallery.png')} />
-      <Image style={styles.gallery} source={require('../assets/Gallery.png')} />
-      <Image style={styles.gallery} source={require('../assets/Gallery.png')} />
-      <Image style={styles.gallery} source={require('../assets/Gallery.png')} />
-      
-    </View>
+    <ScrollView contentContainerStyle={styles.div_style}>
+      {imageURLs.map((url, index) => (
+        <Image key={index} source={{ uri: url }} style={styles.gallery} />
+      ))}
+    </ScrollView>
   );
 }
 
@@ -28,6 +39,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     flexDirection: 'row',
+    justifyContent: 'center'
     // justifyContent: 'center'
   },
  
