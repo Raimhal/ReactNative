@@ -2,64 +2,38 @@ import * as React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 
 export default function Main() {
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  const fetchNews = async () => {
+    try {
+      const response = await fetch('https://github.com/Raimhal/ReactNative/tree/master/news.json');
+      const data = await response.json();
+      setNews(data);
+    } catch (error) {
+      console.error('Error fetching news:', error);
+    }
+  };
+
   return (
     <View>
       <Text style={styles.h1}>Новини</Text>
-      <View style={styles.info_div}>
-        <Image
-          style={styles.picture}
-          source={require('../assets/picture.png')}
-        />
-        <View>
-          <Text style={styles.info_h2}>Заголовок новини</Text>
-          <Text style={styles.data_p}>Дата новини</Text>
-          <Text style={styles}>Коротки текст новини</Text>
+      {news.map(item => (
+        <View key={item.id} style={styles.info_div}>
+          <Image
+            style={styles.picture}
+            source={require('../assets/picture.png')}
+          />
+          <View>
+            <Text style={styles.info_h2}>{item.title}</Text>
+            <Text style={styles.data_p}>{item.date}</Text>
+            <Text style={styles}>{item.text}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.info_div}>
-        <Image
-          style={styles.picture}
-          source={require('../assets/picture.png')}
-        />
-        <View>
-          <Text style={styles.info_h2}>Заголовок новини</Text>
-          <Text style={styles.data_p}>Дата новини</Text>
-          <Text style={styles}>Коротки текст новини</Text>
-        </View>
-      </View>
-      <View style={styles.info_div}>
-        <Image
-          style={styles.picture}
-          source={require('../assets/picture.png')}
-        />
-        <View>
-          <Text style={styles.info_h2}>Заголовок новини</Text>
-          <Text style={styles.data_p}>Дата новини</Text>
-          <Text style={styles}>Коротки текст новини</Text>
-        </View>
-      </View>
-      <View style={styles.info_div}>
-        <Image
-          style={styles.picture}
-          source={require('../assets/picture.png')}
-        />
-        <View>
-          <Text style={styles.info_h2}>Заголовок новини</Text>
-          <Text style={styles.data_p}>Дата новини</Text>
-          <Text style={styles}>Коротки текст новини</Text>
-        </View>
-      </View>
-      <View style={styles.info_div}>
-        <Image
-          style={styles.picture}
-          source={require('../assets/picture.png')}
-        />
-        <View>
-          <Text style={styles.info_h2}>Заголовок новини</Text>
-          <Text style={styles.data_p}>Дата новини</Text>
-          <Text style={styles}>Коротки текст новини</Text>
-        </View>
-      </View>
+      ))}
     </View>
   );
 }
